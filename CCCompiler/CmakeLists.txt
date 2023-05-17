@@ -1,0 +1,10 @@
+cmake_minimum_required(VERSION 3.25)
+project(Course_compiler)
+
+set(CMAKE_CXX_COMPILER "D:/university/C++/mingw64/bin/g++.exe")
+
+set(CMAKE_C_COMPILER "D:/university/C++/mingw64/bin/gcc.exe")
+
+add_executable(Course_compiler src/main.cpp)
+
+# cmake -G"MinGW Makefiles"

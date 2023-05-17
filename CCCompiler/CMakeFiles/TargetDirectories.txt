@@ -1,0 +1,3 @@
+D:/university/Subjects/Compilation/Course Design/CCCompiler/CMakeFiles/Course_compiler.dir
+D:/university/Subjects/Compilation/Course Design/CCCompiler/CMakeFiles/edit_cache.dir
+D:/university/Subjects/Compilation/Course Design/CCCompiler/CMakeFiles/rebuild_cache.dir
