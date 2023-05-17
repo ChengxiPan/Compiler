@@ -8,3 +8,4 @@ set(CMAKE_C_COMPILER "D:/university/C++/mingw64/bin/gcc.exe")
 add_executable(Course_compiler src/main.cpp)
 
 # cmake -G"MinGW Makefiles"
+# ./Course_Compiler
