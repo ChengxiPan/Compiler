@@ -1,0 +1,3 @@
+/home/Compiler/CMakeFiles/course_design_compiler.dir
+/home/Compiler/CMakeFiles/edit_cache.dir
+/home/Compiler/CMakeFiles/rebuild_cache.dir
