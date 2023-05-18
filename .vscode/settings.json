@@ -35,5 +35,5 @@
   ],
   "C_Cpp_Runner.useAddressSanitizer": false,
   "C_Cpp_Runner.showCompilationTime": false,
-  "cmake.sourceDirectory": "D:/university/Subjects/Compilation/Course Design/Make_Test"
+  "cmake.sourceDirectory": "/home/Compiler"
 }

@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/course_design_compiler.dir/src/main.cpp.o -o course_design_compiler 
