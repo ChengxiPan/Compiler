@@ -47,9 +47,7 @@ jack是一种面向对象语言，常用于vm计算机系统开发。本项目�
 * 判断源程序是否符合语法规则
 * 生成抽象语法树
 
-本jack编译器使用了上下文无关文法(BNF)进行定义，如下所示
-
-（具体见[https://github.com/shellphy/jack-compiler](https://github.com/shellphy/jack-compiler)，显示了终结符和非终结符）
+本jack编译器使用了上下文无关文法(BNF)进行定义，如下所示，其中非粗体字表示非终结符, 粗体字表示终结符
 
 <pre>
     program -> classlist
