@@ -51,91 +51,91 @@ jack是一种面向对象语言，常用于vm计算机系统开发。本项目�
 
 （具体见[https://github.com/shellphy/jack-compiler](https://github.com/shellphy/jack-compiler)，显示了终结符和非终结符）
 
-```
+<pre>
     program -> classlist
     classlist -> classlist class
                | class
-    class -> class ID { classVarDecList subroutineDecList }
+    class -> <strong>class</strong> ID <strong>{</strong> classVarDecList subroutineDecList <strong>}</strong>
     classVarDecList -> classVarDecList classVarDec
              	     |
-    classVarDec -> static type varNameList ;
-                 | field type varNameList ;
-    varNameList -> varNameList , ID
+    classVarDec -> <strong>static</strong> type varNameList <strong>;</strong>
+                 | <strong>field</strong> type varNameList <strong>;</strong>
+    varNameList -> varNameList <strong>,</strong> ID
                  | ID
-    type -> int
-          | float
-          | char
-          | boolean
-          | void
+    type -> <strong>int</strong>
+          | <strong>float</strong>
+          | <strong>char</strong>
+          | <strong>boolean</strong>
+          | <strong>void</strong>
           | ID
     subroutineDecList -> subroutineDecList subroutineDec
                        | 
-    subroutineDec -> constructor type ID ( params ) subroutineBody
-                   | function type ID ( params ) subroutineBody
-                   | method type ID (params ) subroutineBody
+    subroutineDec -> <strong>constructor</strong> type ID <strong>(</strong> params <strong>)</strong> subroutineBody
+                   | <strong>function</strong> type ID <strong>(</strong> params <strong>)</strong> subroutineBody
+                   | <strong>method</strong> type ID <strong>(</strong>params <strong>)</strong> subroutineBody
     params -> paramList
             | 
-    paramList -> paramList , param
+    paramList -> paramList <strong>,</strong> param
                | param
     param -> type ID
-    subroutineBody -> { varDecList statements }
+    subroutineBody -> <strong>{</strong> varDecList statements <strong>}</strong>
     varDecList -> varDecList varDec
                 | 
-    varDec -> type varNameList ;
+    varDec -> type varNameList <strong>;</strong>
     statements -> statements statement
                 | 
     statement -> assign_statement
                | if_statement
                | while_statement
                | return_statement
-               | call_statement ;
-    assign_statement -> leftValue = expression ; 
+               | call_statement <strong>;</strong>
+    assign_statement -> leftValue <strong>=</strong> expression <strong>;</strong> 
     leftValue -> ID
-               | ID [ expression ]
-    if_statement -> if ( expression ) statement
-                  | if ( expression ) statement else statement
-    while_statement -> while ( expression ) { statement }
-    return_statement -> return ; 
-                      | return expression ;
-    call_statement -> ID ( expressions ) 
-                    | ID . ID ( expressions )
+               | ID <strong>[</strong> expression <strong>]</strong>
+    if_statement -> <strong>if (</strong> expression <strong>)</strong> statement
+                  | <strong>if (</strong> expression <strong>)</strong> statement <strong>else</strong> statement
+    while_statement -> <strong>while (</strong> expression <strong>) {</strong> statement <strong>}</strong>
+    return_statement -> <strong>return ; </strong>
+                      | <strong>return</strong> expression <strong>;</strong>
+    call_statement -> ID <strong>(</strong> expressions <strong>)</strong> 
+                    | ID <strong>.</strong> ID <strong>(</strong> expressions <strong>)</strong>
     expressions -> expression_list
                  | 
-    expression_list -> expression_list , expression
+    expression_list -> expression_list <strong>,</strong> expression
                      | expression
-    expression -> expression & boolExpression
-                | expression | boolExpression
+    expression -> expression <strong>&</strong> boolExpression
+                | expression <strong>|</strong> boolExpression
                 | boolExpression
     boolExpression -> additive_expression relational_operator additive_expression
                     | additive_expression
-    relational_operator -> <= 
-                         | >=
-                         | ==
-                         | <
-                         | >
-                         | !=
-    additive_expression -> additive_expression + term
-                         | additive_expression – term
+    relational_operator -> <strong><=</strong> 
+                         | <strong>>=</strong>
+                         | <strong>==</strong>
+                         | <strong><</strong>
+                         | <strong>></strong>
+                         | <strong>!=</strong>
+    additive_expression -> additive_expression <strong>+</strong> term
+                         | additive_expression <strong>–</strong> term
                          | term    
-    term -> term * factor
-          | term / factor
+    term -> term <strong>*</strong> factor
+          | term <strong>/</strong> factor
           | factor
-    factor -> - positive_factor
+    factor -> <strong>-</strong> positive_factor
             | positive_factor
-    positive_factor -> ~ not_factor
+    positive_factor -> <strong>~</strong> not_factor
                      | not_factor
-    not_factor -> INT_CONST
-                | CHAR_CONST
-                | STRING_CONST
+    not_factor -> <strong>INT_CONST</strong>
+                | <strong>CHAR_CONST</strong>
+                | <strong>STRING_CONST</strong>
                 | keywordConstant
                 | ID
-                | ID [ expression ]
+                | ID <strong>[</strong> expression <strong>]</strong>
                 | call_expression
-                | ( expression )
-    keywordConstant -> true
-                     | false
-                     | null
-                     | this
-    call_expression -> ID ( expression )
-                     | ID . ID ( expression )
-```
+                | <strong>(</strong> expression <strong>)</strong>
+    keywordConstant -> <strong>true</strong>
+                     | <strong>false</strong>
+                     | <strong>null</strong>
+                     | <strong>this</strong>
+    call_expression -> ID <strong>(</strong> expression <strong>)</strong>
+                     | ID <strong>.</strong> ID <strong>(</strong> expression <strong>)</strong>
+</pre>
