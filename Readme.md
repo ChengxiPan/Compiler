@@ -137,3 +137,4 @@ jack是一种面向对象语言，常用于vm计算机系统开发。本项目�
     call_expression -> ID <strong>(</strong> expression <strong>)</strong>
                      | ID <strong>.</strong> ID <strong>(</strong> expression <strong>)</strong>
 </pre>
+## 词义分析
