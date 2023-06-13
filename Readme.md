@@ -14,7 +14,7 @@ jack是一种面向对象语言，常用于vm计算机系统开发。本项目�
 
 此编译器的实现包含了以下几个步骤：词法分析、语法分析、语义分析、vm中间代码的生成 和 虚拟机   
 
-## 词法分析器
+## 词法分析
 
 对应文件：`Scanner.cpp`
 
@@ -34,7 +34,7 @@ jack是一种面向对象语言，常用于vm计算机系统开发。本项目�
 
 4、字符的转移图
 
-## 语法分析器
+## 语法分析
 
 对应文件：`Parser.cpp`
 使用递归下降的方法实现
@@ -139,3 +139,8 @@ jack是一种面向对象语言，常用于vm计算机系统开发。本项目�
     call_expression -> ID <strong>(</strong> expression <strong>)</strong>
                      | ID <strong>.</strong> ID <strong>(</strong> expression <strong>)</strong>
 </pre>
+## 语义分析
+
+## 中间代码生成
+
+## 总结与展望
