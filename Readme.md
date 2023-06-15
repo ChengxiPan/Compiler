@@ -16,23 +16,86 @@ jack是一种面向对象语言，常用于vm计算机系统开发。本项目�
 
 ## 词法分析
 
-对应文件：`Scanner.cpp`
+对应文件：`Scanner`
 
-使用手工编码，识别源程序中的单词(token)；通过扫描之后在`output.txt`中写入程序中的所有token及其kind。其中kind表示token的词性或类型。  
-
-<img src="https://raw.githubusercontent.com/Sweet196/Picgo-images/main/problems/202305181923217.png" style="zoom: 50%;" />  
+识别源程序中的单词(token)；通过扫描之后在`output.txt`中写入程序中的所有token及其kind。其中kind表示token的词性或类型。    
 
 ### 状态转移图
 
-词法规则使用了正则表达式来定义，可以画出状态转移图(FA)。
+词法规则使用了正则表达式来定义，可以画出状态转移图(FA)。状态机转移图中的状态定义如下：
 
-1、简单的转移图示例
+| States definition | Meaning                |
+| :---------------- | ---------------------- |
+| START_STATE       | 开始状态               |
+| ID_STATE          | 标识符状态             |
+| INT_STATE         | 整型数状态             |
+| CHAR_STATE        | 字符状态               |
+| FLOAT_STATE       | 浮点数状态             |
+| D_FLOAT_STATE     | 带小数点的浮点数状态   |
+| E_FLOAT_STATE     | 科学技术法的浮点数状态 |
+| STRING_STATE      | 字符串状态             |
+| S_STRING_STATE    | 含有转移字符的字符串   |
+| SYMBOL_STATE      | 符号状态               |
+| INCOMMENT_STATE   | 注释状态               |
+| P_INCOMMENT_STATE | 快要结束注释状态       |
+| DONE_STATE        | 结束状态               |
+| ERROR_STATE       | 错误状态               |
 
-2、标识符，整型和浮点型的转移图
+### TokenType
 
-3、字符串的转移图
+在`Scanner::Token`结构体中，`kind`表示标记（Token）的类型。它是`Scanner::TokenType`枚举类型的一个成员，用于区分不同类型的标记。
 
-4、字符的转移图
+`Scanner::TokenType`枚举类型定义了不同的标记类型，包括：
+
+| Member      | Description | KIND |
+| ----------- | ----------- | ---- |
+| `KEY_WORD`  | 关键字      | 0    |
+| `ID`        | 标识符      | 1    |
+| `INT`       | 整型数字    | 2    |
+| `BOOL`      | 布尔类型    | 3    |
+| `CHAR`      | 字符        | 4    |
+| `STRING`    | 字符串      | 5    |
+| `SYMBOL`    | 合法的符号  | 6    |
+| `NONE`      | 无类型      | 7    |
+| `ERROR`     | 错误        | 8    |
+| `ENDOFFILE` | 文件结束    | 9    |
+
+### 保留字与关键字
+
+支持以下符号：
+
+| Category  | Classification       | Content                                             |
+| --------- | -------------------- | --------------------------------------------------- |
+| Keywords  | Class related        | class, constructor, function, method, field, static |
+|           | Function related     | int, char, boolean, void, true, false, this         |
+|           | Control flow related | if, else, while, return                             |
+| Operators | Delimiters           | {, }, (, ), [, ], ., ,, ;                           |
+|           | Arithmetic operators | +, -, *, /                                          |
+|           | Logical operators    | &,\|,~                                              |
+|           | Comparison operators | <, >, =, >=, <=, ==, !=                             |
+
+编写主函数进行测试，可得到词法分析结果：
+
+```c++
+#include "Scanner.h"
+#include <iostream>
+
+using namespace std;
+
+int main() {
+  Scanner scanner;
+  scanner.openFile("test.jack");
+  Scanner::Token token = scanner.nextToken();
+  while (token.kind != Scanner::ENDOFFILE) {
+    cout << "[Token]: " << token.lexeme << " [Kind]: " << token.kind << endl;
+    token = scanner.nextToken();
+  }
+  scanner.closeFile();
+  return 0;
+}
+```
+
+<img src="https://raw.githubusercontent.com/Sweet196/Picgo-images/main/problems/202305181923217.png" style="zoom: 50%;" />
 
 ## 语法分析
 
