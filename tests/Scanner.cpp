@@ -113,13 +113,13 @@ void Scanner::rollBack() {
 }
 
 Scanner::Token Scanner::nextToken() {
-  Token token;
+  Token token;//最终的token
   // unsigned tokenStringIndex = 0;
-  State state = START_STATE;
+  State state = START_STATE;//初始化为开始态
   while (state != DONE_STATE) {
     char ch = nextChar();
-    if (ch == EOF) {
-      token.kind = ENDOFFILE;
+    if (ch == EOF) {//结束
+      token.kind = ENDOFFILE;//文件结束
       break;
     }
     switch (state) {
@@ -205,6 +205,7 @@ Scanner::Token Scanner::nextToken() {
         token.lexeme += ch;
       }
       break;
+    //
     case SYMBOL_STATE:
       if (token.lexeme == "/") {
         if (ch == '*') {
@@ -324,4 +325,7 @@ Scanner::Token Scanner::nextToken() {
       token.kind = searchReserved(token.lexeme);
   }
   return token;
+
+
+  
 }
