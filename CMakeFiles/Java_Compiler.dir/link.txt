@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/Java_Compiler.dir/src/main.cpp.o -o output/Java_Compiler  libjavalib.a 

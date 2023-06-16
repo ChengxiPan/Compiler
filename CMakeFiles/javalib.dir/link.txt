@@ -1,0 +1,2 @@
+/usr/bin/ar qc libjavalib.a CMakeFiles/javalib.dir/src/Analyzer.cpp.o CMakeFiles/javalib.dir/src/CodeGen.cpp.o CMakeFiles/javalib.dir/src/Error.cpp.o CMakeFiles/javalib.dir/src/Parser_copy.cpp.o CMakeFiles/javalib.dir/src/Parser.cpp.o CMakeFiles/javalib.dir/src/Scanner_copy.cpp.o CMakeFiles/javalib.dir/src/Scanner.cpp.o CMakeFiles/javalib.dir/src/SymbolTable.cpp.o CMakeFiles/javalib.dir/src/main.cpp.o
+/usr/bin/ranlib libjavalib.a

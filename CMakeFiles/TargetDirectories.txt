@@ -1,0 +1,4 @@
+/home/Projects_C/Compiler copy/CMakeFiles/javalib.dir
+/home/Projects_C/Compiler copy/CMakeFiles/Java_Compiler.dir
+/home/Projects_C/Compiler copy/CMakeFiles/edit_cache.dir
+/home/Projects_C/Compiler copy/CMakeFiles/rebuild_cache.dir
