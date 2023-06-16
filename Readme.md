@@ -10,7 +10,7 @@ Release:        22.04
 
 ## 项目简介
 
-规则参考来源：https://github.com/Dayunxi/LL1-Compiler，但有所更改。LL(1)更改为了LR(0)
+规则参考来源：https://github.com/Dayunxi/LL1-Compiler
 
 中间代码生成参考：https://github.com/shellphy/jack-compiler
 
