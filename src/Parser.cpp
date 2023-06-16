@@ -13,10 +13,10 @@ Parser::Parser(vector<string> &filenames) {
 
 Scanner::Token Parser::getToken() {
   if (tokenBuffer2.size() == 0) {
-    auto token = scanner.nextToken();
-    tokenBuffer1.push_back(token);
-    if (tokenBuffer1.size() > 10)
-      tokenBuffer1.pop_front();
+    auto token = scanner.nextToken();  
+    tokenBuffer1.push_back(token);  
+    if (tokenBuffer1.size() > 10)  
+      tokenBuffer1.pop_front();  
   } else {
     auto token = tokenBuffer2.front();
     tokenBuffer1.push_back(token);
