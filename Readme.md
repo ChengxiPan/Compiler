@@ -95,7 +95,7 @@ int main() {
 }
 ```
 
-<img src="https://raw.githubusercontent.com/Sweet196/Picgo-images/main/problems/202305181923217.png" style="zoom: 50%;" />
+<img src="https://raw.githubusercontent.com/Sweet196/Picgo-images/main/problems/202306151257410.png" alt="image-20230615125708988" style="zoom:50%;" />
 
 ## 语法分析
 
