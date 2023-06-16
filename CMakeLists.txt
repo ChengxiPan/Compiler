@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.25)
+cmake_minimum_required(VERSION 3.22)
 project(Java_Compiler)
 set(CMAKE_CXX_STANDARD 17)
 
@@ -11,5 +11,5 @@ aux_source_directory (src JAVA_LIB_SRC)
 # 将所有可执行文件链接到一个静态库中,并编译
 add_library (javalib "${JAVA_LIB_SRC}")
 # 将编译出的文件放在一个java.cpp中
-add_executable (${PROJECT_NAME} src/java.cpp)
+add_executable (${PROJECT_NAME} src/main.cpp)
 target_link_libraries (${PROJECT_NAME} javalib) #将jacklib链接到可执行文件

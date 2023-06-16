@@ -5,7 +5,7 @@ using namespace std;
 
 int main() {
   Scanner scanner;
-  scanner.openFile("src/test.jack");
+  scanner.openFile("../inputs/demo1_HelloWorld.java");
   Scanner::Token token = scanner.nextToken();
   while (token.kind != Scanner::ENDOFFILE) {
     cout << "[Token]: " << token.lexeme << " [Kind]: " << token.kind << endl;
