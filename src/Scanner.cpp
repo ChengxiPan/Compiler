@@ -19,7 +19,7 @@ void Scanner::resetRow() { row = 0; }
 
 void Scanner::openFile(const string &filename) {
   string suffix = filename.substr(filename.size() - 5, 5);
-  if (suffix != ".java" and suffix != ".j") {
+  if (suffix != ".java") {
     cerr << "file '" << filename
          << "' is not a standard java-- file, filename must be ended by '.java' "
          << endl;
