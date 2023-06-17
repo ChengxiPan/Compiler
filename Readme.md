@@ -26,14 +26,14 @@ Release:        22.04
 ├── Makefile
 ├── Readme.md
 ├── api
-│   ├── Array.j
-│   ├── IO.j
-│   ├── Input.j
-│   ├── Math.j
-│   ├── Memory.j
-│   ├── Output.j
-│   ├── String.j
-│   └── Sys.j
+│   ├── Array.java
+│   ├── IO.java
+│   ├── Input.java
+│   ├── Math.java
+│   ├── Memory.java
+│   ├── Output.java
+│   ├── String.java
+│   └── Sys.java
 ├── include
 │   ├── Analyzer.h
 │   ├── CodeGen.h
@@ -61,6 +61,7 @@ Release:        22.04
     ├── Error.cpp
     ├── Error.h
     ├── Lexical.cpp
+    ├── Main.java
     ├── Makefile
     ├── Parser.cpp
     ├── Parser.h
@@ -78,12 +79,73 @@ Release:        22.04
     │   ├── String.j
     │   └── Sys.j
     └── main.cpp
+
+6 directories, 51 files
+(base) root@冰绒的诺基亚:/home/Projects_C/Compiler# tree
+.
+├── CMakeLists.txt
+├── Makefile
+├── Readme.md
+├── api
+│   ├── Array.java
+│   ├── IO.java
+│   ├── Input.java
+│   ├── Math.java
+│   ├── Memory.java
+│   ├── Output.java
+│   ├── String.java
+│   └── Sys.java
+├── include
+│   ├── Analyzer.h
+│   ├── CodeGen.h
+│   ├── Error.h
+│   ├── Parser.h
+│   ├── Scanner.h
+│   └── SymbolTable.h
+├── inputs
+│   ├── demo1_HelloWorld.java
+│   ├── demo2_Array.java
+│   └── demo3_gcd.java
+├── src
+│   ├── Analyzer.cpp
+│   ├── CodeGen.cpp
+│   ├── Error.cpp
+│   ├── Parser.cpp
+│   ├── Scanner.cpp
+│   ├── SymbolTable.cpp
+│   └── main.cpp
+└── tests
+    ├── Analyzer.cpp
+    ├── Analyzer.h
+    ├── CodeGen.cpp
+    ├── CodeGen.h
+    ├── Error.cpp
+    ├── Error.h
+    ├── Lexical.cpp
+    ├── Main.java
+    ├── Makefile
+    ├── Parser.cpp
+    ├── Parser.h
+    ├── Scanner.cpp
+    ├── Scanner.h
+    ├── SymbolTable.cpp
+    ├── SymbolTable.h
+    ├── api
+    │   ├── Array.java
+    │   ├── IO.java
+    │   ├── Input.java
+    │   ├── Math.java
+    │   ├── Memory.java
+    │   ├── Output.java
+    │   ├── String.java
+    │   └── Sys.java
+    └── main.cpp
 ```
 
 - `CMakeLists.txt`：CMake构建系统的配置文件，用于定义项目的构建规则和依赖关系。
 - `Makefile`：用于GNU Make构建工具的配置文件，定义了项目的编译规则和依赖关系。
 - `Readme.md`：项目的说明文档，包含项目的简介、使用方法、贡献指南等信息。
-- `api`目录：存放接口相关的文件，以`.j`为扩展名，用于语法规则。
+- `api`目录：存放接口相关的文件，以`.java`为扩展名，用于语法规则。
 - `include`目录：包含项目的头文件（`.h`文件），用于声明各个模块的接口和数据结构。
 - `inputs`目录：存放输入文件的目录，可能包含多个`.java`文件，如`demo1_HelloWorld.java`、`demo2_Array.java`等，用于测试编译器的输入。
 - `src`目录：包含项目的源代码文件，包括各个模块的实现文件（`.cpp`文件）和主程序文件（`main.cpp`）。
@@ -380,7 +442,7 @@ int main() {
 * 判断源程序是否符合语法规则
 * 生成抽象语法树
 
-本jack编译器使用了上下文无关文法(BNF)进行定义，如下所示，其中非粗体字表示非终结符, 粗体字表示终结符
+编译器使用了上下文无关文法(BNF)进行定义，如下所示，其中非粗体字表示非终结符, 粗体字表示终结符
 
 <pre>
     program -> classlist
