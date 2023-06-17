@@ -70,67 +70,6 @@ Release:        22.04
     ├── SymbolTable.cpp
     ├── SymbolTable.h
     ├── api
-    │   ├── Array.j
-    │   ├── IO.j
-    │   ├── Input.j
-    │   ├── Math.j
-    │   ├── Memory.j
-    │   ├── Output.j
-    │   ├── String.j
-    │   └── Sys.j
-    └── main.cpp
-
-6 directories, 51 files
-(base) root@冰绒的诺基亚:/home/Projects_C/Compiler# tree
-.
-├── CMakeLists.txt
-├── Makefile
-├── Readme.md
-├── api
-│   ├── Array.java
-│   ├── IO.java
-│   ├── Input.java
-│   ├── Math.java
-│   ├── Memory.java
-│   ├── Output.java
-│   ├── String.java
-│   └── Sys.java
-├── include
-│   ├── Analyzer.h
-│   ├── CodeGen.h
-│   ├── Error.h
-│   ├── Parser.h
-│   ├── Scanner.h
-│   └── SymbolTable.h
-├── inputs
-│   ├── demo1_HelloWorld.java
-│   ├── demo2_Array.java
-│   └── demo3_gcd.java
-├── src
-│   ├── Analyzer.cpp
-│   ├── CodeGen.cpp
-│   ├── Error.cpp
-│   ├── Parser.cpp
-│   ├── Scanner.cpp
-│   ├── SymbolTable.cpp
-│   └── main.cpp
-└── tests
-    ├── Analyzer.cpp
-    ├── Analyzer.h
-    ├── CodeGen.cpp
-    ├── CodeGen.h
-    ├── Error.cpp
-    ├── Error.h
-    ├── Lexical.cpp
-    ├── Main.java
-    ├── Makefile
-    ├── Parser.cpp
-    ├── Parser.h
-    ├── Scanner.cpp
-    ├── Scanner.h
-    ├── SymbolTable.cpp
-    ├── SymbolTable.h
-    ├── api
     │   ├── Array.java
     │   ├── IO.java
     │   ├── Input.java
