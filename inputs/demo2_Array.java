@@ -1,6 +1,6 @@
 class Main 
 {
-    function void demo2_Array() 
+    function void main() 
     {
 		Array arr;
 		String s;

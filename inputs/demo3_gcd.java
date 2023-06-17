@@ -1,6 +1,6 @@
 class Main
 {
-	function void demo3_gcd()
+	function void main()
 	{
 		int a, b, c;
 		String s;
