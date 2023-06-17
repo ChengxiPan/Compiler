@@ -37,11 +37,8 @@ Release:        22.04
 ├── include
 │   ├── Analyzer.h
 │   ├── CodeGen.h
-│   ├── Error copy.h
 │   ├── Error.h
-│   ├── Parser copy.h
 │   ├── Parser.h
-│   ├── Scanner copy.h
 │   ├── Scanner.h
 │   └── SymbolTable.h
 ├── inputs
@@ -71,6 +68,15 @@ Release:        22.04
     ├── Scanner.h
     ├── SymbolTable.cpp
     ├── SymbolTable.h
+    ├── api
+    │   ├── Array.j
+    │   ├── IO.j
+    │   ├── Input.j
+    │   ├── Math.j
+    │   ├── Memory.j
+    │   ├── Output.j
+    │   ├── String.j
+    │   └── Sys.j
     └── main.cpp
 ```
 
@@ -130,7 +136,9 @@ cmake .
 make
 ```
 
-分别提供了模块化测试的功能，存放在了tests文件夹中，通过如下命令使用： 
+3、使用生成的可执行文件，输入对应源文件，得到产生的中间代码
+
+分别提供了模块化测试的功能，存放在了tests文件夹中。进行通过如下命令使用： 
 
 ```shell
 cd tests
@@ -144,6 +152,8 @@ make Parser
 make Analyser
 # 中间代码生成：已是最终目标，请返回步骤1、2
 ```
+
+需要注意的是，tests文件夹内的测试仅包含了对`HelloWorld.java`的用例测试，对于其他功能（如语法分析中对各类接口的调用，生成规则及使用），可以自行编写测试。
 
 ## 词法分析
 
