@@ -37,11 +37,8 @@ Release:        22.04
 ├── include
 │   ├── Analyzer.h
 │   ├── CodeGen.h
-│   ├── Error copy.h
 │   ├── Error.h
-│   ├── Parser copy.h
 │   ├── Parser.h
-│   ├── Scanner copy.h
 │   ├── Scanner.h
 │   └── SymbolTable.h
 ├── inputs
@@ -71,6 +68,15 @@ Release:        22.04
     ├── Scanner.h
     ├── SymbolTable.cpp
     ├── SymbolTable.h
+    ├── api
+    │   ├── Array.j
+    │   ├── IO.j
+    │   ├── Input.j
+    │   ├── Math.j
+    │   ├── Memory.j
+    │   ├── Output.j
+    │   ├── String.j
+    │   └── Sys.j
     └── main.cpp
 ```
 
@@ -130,7 +136,21 @@ cmake .
 make
 ```
 
-分别提供了模块化测试的功能，存放在了tests文件夹中，通过如下命令使用： 
+3、生成的可执行文件会产生在`output`文件夹下。使用前需要做以下操作：
+
+```shell
+cp -r inputs output/
+cp -r api output/
+```
+
+4、进入output文件夹执行。<span style="color:red">提供了三个测试用例，每个使用前都需要将文件名改成Main，否则会触发规定的classname error</span>
+
+```shell
+cd output
+./Java_Compiler inputs/Main.java
+```
+
+此外，我们分别提供了模块化测试的功能，存放在了tests文件夹中。进行通过如下命令使用： 
 
 ```shell
 cd tests
@@ -144,6 +164,123 @@ make Parser
 make Analyser
 # 中间代码生成：已是最终目标，请返回步骤1、2
 ```
+
+需要注意的是，tests文件夹内的测试仅包含了对`HelloWorld.java`的用例测试，对于其他功能（如语法分析中对各类接口的调用，生成规则及使用），可以自行编写测试。
+
+inputs中提供了3个测试用例，如下:
+
+* demo1: HelloWorld
+
+  ```java
+  class Main {
+    function void demo1_HelloWorld() {
+      Output.printString("Hello, world!");
+      return;
+    }
+  }
+  ```
+
+* demo2: Array
+
+  ```java
+  class Main 
+  {
+      function void main() 
+      {
+  		Array arr;
+  		String s;
+  		int i;
+  		
+  		arr = Array.new(5);		// 创建一个大小为5的数组
+  		i = 0;
+  		while (i < 5)
+  		{
+  			s = Input.readLine();
+  			arr[i] = s.intValue();
+  			i = i + 1;
+  		}
+  		
+  		Main.bubble_sort(arr, 5);
+  		
+  		i = 0;
+  		while (i < 5)
+  		{
+  			Output.printInt(arr[i]);
+  			i = i + 1;
+  		}
+  		Output.println();
+  		
+  		return;
+  	}
+  	
+  	/* 冒泡排序 */
+  	function void bubble_sort(Array arr, int n)
+  	{
+  		int i, j, tmp;
+  		i = n - 1;
+  		
+  		while (i > 0 | i == 0)	
+  		{
+  			j = 0;
+  			while (j < i)
+  			{
+  				if (arr[j] > arr[j + 1])
+  				{
+  					tmp = arr[j];
+  					arr[j] = arr[j + 1];
+  					arr[j + 1] = tmp;
+  				}
+  				j = j + 1;
+  			}
+  			i = i - 1;
+  		}
+  	
+  		return;
+  	}
+  }
+  ```
+
+* demo3: gcd
+
+  ```java
+  class Main
+  {
+  	function void main()
+  	{
+  		int a, b, c;
+  		String s;
+  		
+  		s = Input.readLine();
+  		a = s.intValue();
+  		
+  		s = Input.readLine();
+  		b = s.intValue();
+  		
+  		c = Main.gcd(a, b);   
+  		
+  		Output.printInt(c);
+  		Output.println();
+  		
+  		return;
+  	}
+  	
+  	// 求最大公约数
+  	function int gcd(int a, int b)
+  	{
+  		if (b == 0)
+  		{
+  			return a;
+  		}
+  		else
+  		{
+  			return Main.gcd(b, a - a / b * b);
+  		}
+  	}
+  	
+  }
+  ```
+
+  
 
 ## 词法分析
 
@@ -203,7 +340,7 @@ make Analyser
 | Operators | Delimiters           | {, }, (, ), [, ], ., ,, ;                           |
 |           | Arithmetic operators | +, -, *, /                                          |
 |           | Logical operators    | &,\|,~                                              |
-|           | Comparison operators | <, >, =, >=, <=, ==, !=                             |
+|           | Comparison operators | <, >, =, ==, !=                                     |
 
 编写主函数进行测试，可得到词法分析结果：
 
