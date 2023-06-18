@@ -474,6 +474,124 @@ int main() {
                      | ID <strong>.</strong> ID <strong>(</strong> expression <strong>)</strong>
 </pre>
 ## 语义分析
+分析过程：通过对语法分析的结果（语法树）进行分析，判断语义错误，若有错输出错误内容。
+
+成员函数：
+<pre>
+class Analyzer {
+private:
+  Parser::TreeNode *tree;
+  SymbolTable *symbolTable;
+  string currentClassName;    // 遍历树的时候, 保存当前类的名称
+  string currentFunctionName; // 遍历树的时候, 保存当前函数的名称
+  void buildClassesTable(Parser::TreeNode *t);
+  void checkStatements(Parser::TreeNode *t);
+  void checkStatement(Parser::TreeNode *t);
+  void checkExpression(Parser::TreeNode *t);
+  void checkArguments(Parser::TreeNode *t, vector<string> const& parameter,
+                      string const& functionName);
+  void checkMain();
+public:
+  Analyzer(Parser::TreeNode *t);
+  void check();
+};
+</pre>
+## 分析过程
+    首先通过函数buildClassesTable递归构建符号表中的类定义部分，将类的信息插入到符号表中，然后由函数checkMain：检查程序中是否存在名为Main的类，并验证其中是否存在名为main的静态函数，满足main函数的特定要求，最后函数checkStatements：递归检查语法树中的语句列表，将子过程的信息插入符号表，并调用checkStatement函数对每个语句进行语义检查，
+checkStatement：检查赋值语句、条件语句、循环语句、返回语句和函数调用语句的语义正确性（其中调用函数函数checkExpression和函数checkArguments）。
+## 函数详细描述
+
+构造函数Analyzer::Analyzer(Parser::TreeNode *t)：接收一个指向语法树节点的指针，并初始化symbolTable和tree成员变量。
+
+函数checkExpression：该函数用于检查语法树中的表达式部分的语义正确性。
+函数首先检查传入的语法树节点是否为nullptr，如果不是，则对节点的子节点进行递归调用checkExpression函数。
+然后，根据节点的类型（nodeKind）执行相应的操作：
+如果节点类型为VAR_K，表示该节点为变量，函数会在符号表中查找变量的信息。首先在当前子程序的符号表中查找，如果找不到，则在当前类的符号表中查找。如果仍然找不到，则调用error5函数报告错误。
+如果节点类型为ARRAY_K，表示该节点为数组变量，函数会在符号表中查找数组变量的信息，与上述步骤相同。如果找到了变量信息，还会检查变量的类型是否为"Array"，如果不是，则调用error6函数报告错误。
+如果节点类型为CALL_EXPRESSION_K或CALL_STATEMENT_K，表示该节点为函数调用表达式或语句。函数首先检查调用的函数是否在当前类中声明，如果未找到，则调用error7函数报告错误。然后，检查当前子程序和被调用的函数是否都是方法（即类中的成员函数）。如果是，则调用error8函数报告错误。接下来，函数会在符号表中查找函数的信息，并使用checkArguments函数检查函数调用的参数是否匹配。最后，根据被调用函数的类型，将节点的nodeKind设置为相应的值（METHOD_CALL_K、FUNCTION_CALL_K或CONSTRUCTOR_CALL_K）。
+如果节点类型不匹配上述情况，函数将执行默认操作，即不进行任何处理。
+以上是checkExpression函数的主要功能。它通过递归遍历语法树，检查表达式中的变量、数组、函数调用等部分的语义正确性，并在发现错误时调用相应的错误处理函数报告错误。
+
+函数checkStatement：该函数用于检查语法树中的语句部分的语义正确性。
+函数根据语法树节点的类型（nodeKind）执行相应的操作：
+如果节点类型为CLASS_K，表示该节点为类声明，函数会将当前类的名称设置为节点的第一个子节点的词素（token.lexeme）。
+如果节点类型为ASSIGN_K，表示该节点为赋值语句，函数会分别检查赋值语句的左侧表达式和右侧表达式的语义正确性，通过调用checkExpression函数进行检查。
+如果节点类型为IF_STATEMENT_K或WHILE_STATEMENT_K，表示该节点为条件语句（if语句或while循环语句），函数会检查条件表达式的语义正确性，通过调用checkExpression函数进行检查。
+如果节点类型为RETURN_STATEMENT_K，表示该节点为返回语句，函数会检查返回表达式的语义正确性，通过调用checkExpression函数进行检查。同时，函数还会在特定情况下进行额外的错误检查，包括检查返回值是否与当前子程序的返回类型匹配、检查构造函数是否在返回语句中使用了"this"关键字等。
+如果节点类型为CALL_STATEMENT_K，表示该节点为函数调用语句，函数会直接调用checkExpression函数对该节点进行检查。
+如果节点类型不匹配上述情况，函数将执行默认操作，即不进行任何处理。
+以上是checkStatement函数的主要功能。它根据语法树节点的类型执行相应的操作，对语句中的表达式、条件语句、返回语句和函数调用语句等部分进行语义正确性检查，并在发现错误时调用相应的错误处理函数报告错误。
+
+函数checkArguments：该函数用于检查函数调用的参数是否与函数定义的参数匹配。
+函数首先定义一个变量argumentSize，用于记录实际参数的个数，并初始化为0。
+然后，函数使用循环遍历函数调用语句节点的子节点，即实际参数的表达式节点。对于每个参数节点，函数调用checkExpression函数进行语义检查，并将argumentSize增加1。
+接下来，函数会进行参数个数的匹配检查。如果实际参数的个数小于形式参数的个数，说明参数个数不足，调用error14函数报告错误。
+如果实际参数的个数大于形式参数的个数，说明参数个数过多，调用error15函数报告错误。
+如果实际参数的个数与形式参数的个数相等，则参数匹配正确，不进行任何处理。
+以上是checkArguments函数的主要功能。它通过循环遍历实际参数节点，进行语义检查，并比较实际参数个数与形式参数个数的匹配情况，根据不同情况调用相应的错误处理函数报告错误。
+
+函数check：该函数用于进行语义分析的入口。
+函数首先调用buildClassesTable函数，该函数根据语法树构建类符号表。它遍历语法树，收集类的信息并添加到符号表中。
+接下来，函数调用checkMain函数，该函数用于检查是否存在Main类和main函数，以及其正确性。
+然后，函数调用checkStatements函数，该函数对语法树中的所有语句进行语义分析。它遍历语法树，针对不同类型的语句调用相应的检查函数进行语义分析。
+以上是check函数的主要功能。它在语义分析过程中完成了类符号表的构建、Main类和main函数的检查，以及对语句部分的语义分析。
+
+函数checkMain：该函数用于检查是否存在Main类和main函数，并对其进行正确性验证。
+函数首先使用symbolTable->classIndexFind("Main")检查符号表中是否存在名为Main的类。如果不存在，调用error16函数报告错误。
+接着，函数使用symbolTable->classesTableFind("Main", "main")查找Main类中是否存在名为main的函数。如果不存在，调用error17函数报告错误。
+然后，函数检查找到的main函数的类型（kind）是否为函数类型（FUNCTION）。如果不是，调用error18函数报告错误。
+接下来，函数检查找到的main函数的返回类型（type）是否为void。如果不是，调用error19函数报告错误。
+最后，函数检查找到的main函数的参数列表（args）是否为空。如果不为空，调用error20函数报告错误。
+以上是checkMain函数的主要功能。它用于检查Main类和main函数是否存在，并对其进行正确性验证，包括检查返回类型、参数列表等。在发现错误时，调用相应的错误处理函数报告错误。
+
+函数buildClassesTable：该函数用于构建符号表中的类定义部分。
+以下是函数的主要步骤：
+声明一个静态变量depth，并将其初始化为0。该变量用于跟踪递归的深度。
+如果depth大于2，则函数直接返回，避免无限递归。
+进入一个循环，处理当前节点t及其后续节点。
+在循环中，将当前节点t插入到符号表的类表（classesTableInsert）中，以记录类的定义信息。
+对于当前节点t的每个子节点（最多5个），递归调用buildClassesTable函数，并将depth加1。这样可以逐层遍历语法树的子树，构建类定义的符号表。
+递归调用结束后，将depth减1。
+将当前节点t移动到下一个兄弟节点，继续处理下一个节点。
+通过以上步骤，buildClassesTable函数可以遍历语法树中的类定义部分，并将类的信息插入到符号表中，以备后续的语义分析使用。函数中的深度限制（depth > 2）可以控制递归的层级，以避免无限递归或过度深入的问题。
+
+函数checkStatements：该函数用于对语法树中的语句进行语义分析。
+函数通过一个循环遍历语法树中的语句节点，每次迭代处理一个语句节点。
+在循环的每个迭代中，首先调用symbolTable->subroutineTableInsert(t)将当前语句节点t插入子程序符号表中。这是为了记录当前语句所在的子程序（函数或方法）的信息，以便后续的语义分析。
+接下来，函数调用checkStatement(t)对当前语句节点进行语义分析。根据语句节点的类型，调用相应的检查函数对语句进行处理。
+然后，函数通过一个循环遍历当前语句节点的子节点，即该语句的子语句节点。对于每个子语句节点，递归调用checkStatements函数进行语义分析。
+最后，函数更新当前语句节点为下一个兄弟节点，即进入下一个迭代。这样可以确保循环能够遍历所有的语句节点。
+以上是checkStatements函数的主要功能。它通过循环遍历语法树中的语句节点，将每个语句节点插入子程序符号表，对每个语句节点进行语义分析，并递归处理每个语句节点的子语句节点。这样可以对整个语法树中的语句进行全面的语义分析。
+
+这些函数共同完成了对语法树的语义分析，包括构建符号表、检查表达式、检查语句、检查函数调用等，以确保程序的语义正确性。
+
+## 错误列表
+对应文件"Error.cpp"
+| 函数名            | 错误类型               |错误信息                                                                                                 |
+| :---------------- | ---------------------- | --------------------------------------------------------------------------------------------------------|
+| syntaxError       | 语法错误               |在当前解析器文件（currentParserFilename）的第 token.row 行，期望一个 expected，但实际得到一个 token.lexeme。 |
+| error1            | 类名和文件名不一致。    |在文件 currentParserFilename.java 中，类名应该和文件名相同。                                               |
+| error2            | 变量重定义             |在当前类 currentClass 的第 row 行，变量类型为 type，变量名为 name，已经被重定义。                            |
+| error3            | 函数重定义              |在当前类 currentClass 的第 row 行，函数返回类型为 type，函数名为 name，已经被重定义。                       |
+| error4            | 类型未定义             |在当前类 currentClassName 的第 row 行，类型 type 未定义                                                   |
+| error5            | 变量未定义             |在当前类 currentClassName 的第 row 行，变量 varName 在当前作用域中未声明                                   |
+| error6            | 类型不是数组类型       |在当前类 currentClassName 的第 row 行，类型 type 不是数组类型                                              |
+| error7            | 调用类中不存在的成员函数|在当前类 currentClassName 的第 row 行，类 callerName 中不存在函数 functionName()                           |
+| error8            | 调用函数用了错误的调用方式|在当前类 currentClassName 的第 row 行，子程序 functionName 被当成了一个方法，但实际上它是在函数内被调用的  |
+| error9            | 在类中调用了不存在的函数|在当前类 currentClassName 的第 row 行，类 callerName 中不存在函数 functionName                             |
+| error10           |调用不是当前类的成员函数|在当前类 currentClassName 的第 row 行，函数 functionName 不是类 callerName 的成员函数                       |
+| error11           | 函数返回值类型错误      |在当前类 currentClassName 的第 row 行，函数返回了空值，但实际上返回类型应该是 type                          |
+| error12           | 函数返回值类型错误      |在当前类 currentClassName 的第 row 行，函数返回了值，但实际上返回类型应该是 void                            |
+| error13           | 构造函数返回值类型错误  |在当前类 currentClassName 的第 row 行，构造函数返回类型必须是类类型                                         |
+| error14           | 函数参数数量不足        |在当前类 currentClassName 的第 row 行，函数 functionName() 的参数数量过少                                  |
+| error15           | 函数参数数量过多        |在当前类 currentClassName 的第 row 行，函数 functionName() 的参数数量过多                                  |
+| error16           |主类不存在               |主类不存在                                                                                               |
+| error17           | 主类中没有 main 函数    |在主类中，main 函数不存在                                                                                 |
+| error18           | main 函数的类型不正确   |在主类中，main 函数的类型必须是函数类型                                                                    |
+| error19           | main 函数返回类型不正确 |在主类中，main 函数的返回类型必须是 void                                                                   |
+| error20           | main 函数参数数量不正确 |在主类中，main 函数的参数数量必须为 null                                                                   |
+
+## 符号表
 对应文件"SymbolTable.cpp"
 
 定义了一个SymbolTable类，其中包括了一些成员变量和成员函数，用于存储和操作符号表。
@@ -517,31 +635,6 @@ initialSubroutineTable函数用于初始化子程序表，将其中的所有变�
 printClassesTable函数用于输出类表中的所有变量信息，包括变量名称、类型、种类、索引和参数列表等信息。
 classIndexFind函数用于在类索引表中查找指定类名是否存在，如果存在则返回true，否则返回false。
 getFieldNumber函数用于获取指定类中的FIELD类型变量数量。它首先在类索引表中查找指定类的编号，然后遍历该类的类表，统计其中的FIELD类型变量数量并返回。
-
-对应文件"Error.cpp"
-| 函数名            | 错误类型               |错误信息                                                                                                 |
-| :---------------- | ---------------------- | --------------------------------------------------------------------------------------------------------|
-| syntaxError       | 语法错误               |在当前解析器文件（currentParserFilename）的第 token.row 行，期望一个 expected，但实际得到一个 token.lexeme。 |
-| error1            | 类名和文件名不一致。    |在文件 currentParserFilename.java 中，类名应该和文件名相同。                                               |
-| error2            | 变量重定义             |在当前类 currentClass 的第 row 行，变量类型为 type，变量名为 name，已经被重定义。                            |
-| error3            | 函数重定义              |在当前类 currentClass 的第 row 行，函数返回类型为 type，函数名为 name，已经被重定义。                       |
-| error4            | 类型未定义             |在当前类 currentClassName 的第 row 行，类型 type 未定义                                                   |
-| error5            | 变量未定义             |在当前类 currentClassName 的第 row 行，变量 varName 在当前作用域中未声明                                   |
-| error6            | 类型不是数组类型       |在当前类 currentClassName 的第 row 行，类型 type 不是数组类型                                              |
-| error7            | 调用类中不存在的成员函数|在当前类 currentClassName 的第 row 行，类 callerName 中不存在函数 functionName()                           |
-| error8            | 调用函数用了错误的调用方式|在当前类 currentClassName 的第 row 行，子程序 functionName 被当成了一个方法，但实际上它是在函数内被调用的  |
-| error9            | 在类中调用了不存在的函数|在当前类 currentClassName 的第 row 行，类 callerName 中不存在函数 functionName                             |
-| error10           |调用不是当前类的成员函数|在当前类 currentClassName 的第 row 行，函数 functionName 不是类 callerName 的成员函数                       |
-| error11           | 函数返回值类型错误      |在当前类 currentClassName 的第 row 行，函数返回了空值，但实际上返回类型应该是 type                          |
-| error12           | 函数返回值类型错误      |在当前类 currentClassName 的第 row 行，函数返回了值，但实际上返回类型应该是 void                            |
-| error13           | 构造函数返回值类型错误  |在当前类 currentClassName 的第 row 行，构造函数返回类型必须是类类型                                         |
-| error14           | 函数参数数量不足        |在当前类 currentClassName 的第 row 行，函数 functionName() 的参数数量过少                                  |
-| error15           | 函数参数数量过多        |在当前类 currentClassName 的第 row 行，函数 functionName() 的参数数量过多                                  |
-| error16           |主类不存在               |主类不存在                                                                                               |
-| error17           | 主类中没有 main 函数    |在主类中，main 函数不存在                                                                                 |
-| error18           | main 函数的类型不正确   |在主类中，main 函数的类型必须是函数类型                                                                    |
-| error19           | main 函数返回类型不正确 |在主类中，main 函数的返回类型必须是 void                                                                   |
-| error20           | main 函数参数数量不正确 |在主类中，main 函数的参数数量必须为 null                                                                   |
 
 ## 中间代码生成
 111111
