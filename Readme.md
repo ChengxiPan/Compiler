@@ -475,7 +475,9 @@ int main() {
 </pre>
 ## 语义分析
 对应文件"SymbolTable.cpp"
+
 定义了一个SymbolTable类，其中包括了一些成员变量和成员函数，用于存储和操作符号表。
+
 成员变量包括：
     currentClassNumber: 当前类的编号。
     static_index: 静态变量的编号。
