@@ -2,6 +2,7 @@
 #define _PARSER_H
 
 #include "Scanner.h"
+#include "Error.h"
 #include <deque>
 #include <string>
 #include <vector>
