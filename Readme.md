@@ -25,8 +25,23 @@ https://github.com/nanlan2017/jack-compiler
 ```shell
 .
 ├── CMakeLists.txt
+├── ErrorInputs
+│   ├── error1.java
+│   ├── error2.java
+│   └── error3.java
 ├── Makefile
 ├── Readme.md
+├── include
+│   ├── Analyzer.h
+│   ├── CodeGen.h
+│   ├── Error.h
+│   ├── Parser.h
+│   ├── Scanner.h
+│   └── SymbolTable.h
+├── inputs
+│   ├── Main.java
+│   ├── demo2_Array.java
+│   └── demo3_gcd.java
 ├── rules
 │   ├── Array.java
 │   ├── IO.java
@@ -36,17 +51,6 @@ https://github.com/nanlan2017/jack-compiler
 │   ├── Output.java
 │   ├── String.java
 │   └── Sys.java
-├── include
-│   ├── Analyzer.h
-│   ├── CodeGen.h
-│   ├── Error.h
-│   ├── Parser.h
-│   ├── Scanner.h
-│   └── SymbolTable.h
-├── inputs
-│   ├── demo1_HelloWorld.java
-│   ├── demo2_Array.java
-│   └── demo3_gcd.java
 ├── src
 │   ├── Analyzer.cpp
 │   ├── CodeGen.cpp
@@ -62,25 +66,28 @@ https://github.com/nanlan2017/jack-compiler
     ├── CodeGen.h
     ├── Error.cpp
     ├── Error.h
-    ├── Lexical.cpp
+    ├── Lexicalt.cpp
     ├── Main.java
     ├── Makefile
     ├── Parser.cpp
     ├── Parser.h
+    ├── Parsert.cpp
     ├── Scanner.cpp
     ├── Scanner.h
     ├── SymbolTable.cpp
     ├── SymbolTable.h
-    ├── rules
-    │   ├── Array.java
-    │   ├── IO.java
-    │   ├── Input.java
-    │   ├── Math.java
-    │   ├── Memory.java
-    │   ├── Output.java
-    │   ├── String.java
-    │   └── Sys.java
-    └── main.cpp
+    ├── main.cpp
+    └── rules
+        ├── Array.java
+        ├── IO.java
+        ├── Input.java
+        ├── Math.java
+        ├── Memory.java
+        ├── Output.java
+        ├── String.java
+        └── Sys.java
+
+7 directories, 55 files
 ```
 
 - `CMakeLists.txt`：CMake构建系统的配置文件，用于定义项目的构建规则和依赖关系。
@@ -670,11 +677,11 @@ getFieldNumber函数用于获取指定类中的FIELD类型变量数量。它首�
 
 对应文件：`CodeGen`
 
-## 中间代码生成的任务
+### 中间代码生成的任务
 
 将通过词法、语法、语义分析后的结果转换成中间代码，将前端与后端分离，使得后端可以处理多种目标平台。常用中间代码的形式有：波兰式、三地址码、DAG图等。
 
-## 具体实现
+### 具体实现
 
 #### 类属性
 
