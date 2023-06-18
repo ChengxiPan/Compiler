@@ -656,7 +656,7 @@ class Main{
     
     如果节点类型是SUBROUTINE_DEC_K，表示遇到了一个函数的定义，此时需要将该函数的信息插入到当前类的map中。根据函数类型的不同，将其设置为函数、方法或构造函数，并将其返回值类型和参数类型加入到其Info对象的args中。如果插入失败，则说明该函数已经存在于符号表中，此时需要报错。
 
-实现了符号表中子程序表的插入操作。具体来说，当节点的类型为CLASS_K时，会将当前类的名称保存在currentClass中；
+subroutineTableInsert(t)实现了符号表中子程序表的插入操作。具体来说，当节点的类型为CLASS_K时，会将当前类的名称保存在currentClass中；
 
 当节点的类型为SUBROUTINE_DEC_K时，会初始化子程序表，并将当前类的编号保存在currentClassNumber中，然后将"this"关键字插入子程序表中，并将var_index和arg_index初始化为0；
 
