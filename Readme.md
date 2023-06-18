@@ -371,9 +371,6 @@ int main() {
 
 对应文件：`Parser.cpp`
 使用递归下降的方法实现
-语法分析器有两个任务:
-1, 判断源程序是否符合语法规则 
-2, 生成抽象语法树
 
 ### 语法分析的任务
 
@@ -382,97 +379,1012 @@ int main() {
 * 判断源程序是否符合语法规则
 * 生成抽象语法树
 
-编译器使用了上下文无关文法(BNF)进行定义，如下所示，其中非粗体字表示非终结符, 粗体字表示终结符
+编译器使用了上下文无关文法(BNF)进行定义,下面是对上述文法中每个产生式（Production）的解释：
 
-<pre>
-    program -> classlist
-    classlist -> classlist class
-               | class
-    class -> <strong>class</strong> ID <strong>{</strong> classVarDecList subroutineDecList <strong>}</strong>
-    classVarDecList -> classVarDecList classVarDec
-             	     |
-    classVarDec -> <strong>static</strong> type varNameList <strong>;</strong>
-                 | <strong>field</strong> type varNameList <strong>;</strong>
-    varNameList -> varNameList <strong>,</strong> ID
-                 | ID
-    type -> <strong>int</strong>
-          | <strong>float</strong>
-          | <strong>char</strong>
-          | <strong>boolean</strong>
-          | <strong>void</strong>
-          | ID
-    subroutineDecList -> subroutineDecList subroutineDec
-                       | 
-    subroutineDec -> <strong>constructor</strong> type ID <strong>(</strong> params <strong>)</strong> subroutineBody
-                   | <strong>function</strong> type ID <strong>(</strong> params <strong>)</strong> subroutineBody
-                   | <strong>method</strong> type ID <strong>(</strong>params <strong>)</strong> subroutineBody
-    params -> paramList
-            | 
-    paramList -> paramList <strong>,</strong> param
-               | param
-    param -> type ID
-    subroutineBody -> <strong>{</strong> varDecList statements <strong>}</strong>
-    varDecList -> varDecList varDec
-                | 
-    varDec -> type varNameList <strong>;</strong>
-    statements -> statements statement
-                | 
-    statement -> assign_statement
-               | if_statement
-               | while_statement
-               | return_statement
-               | call_statement <strong>;</strong>
-    assign_statement -> leftValue <strong>=</strong> expression <strong>;</strong> 
-    leftValue -> ID
-               | ID <strong>[</strong> expression <strong>]</strong>
-    if_statement -> <strong>if (</strong> expression <strong>)</strong> statement
-                  | <strong>if (</strong> expression <strong>)</strong> statement <strong>else</strong> statement
-    while_statement -> <strong>while (</strong> expression <strong>) {</strong> statement <strong>}</strong>
-    return_statement -> <strong>return ; </strong>
-                      | <strong>return</strong> expression <strong>;</strong>
-    call_statement -> ID <strong>(</strong> expressions <strong>)</strong> 
-                    | ID <strong>.</strong> ID <strong>(</strong> expressions <strong>)</strong>
-    expressions -> expression_list
-                 | 
-    expression_list -> expression_list <strong>,</strong> expression
-                     | expression
-    expression -> expression <strong>&</strong> boolExpression
-                | expression <strong>|</strong> boolExpression
-                | boolExpression
-    boolExpression -> additive_expression relational_operator additive_expression
-                    | additive_expression
-    relational_operator -> <strong><=</strong> 
-                         | <strong>>=</strong>
-                         | <strong>==</strong>
-                         | <strong><</strong>
-                         | <strong>></strong>
-                         | <strong>!=</strong>
-    additive_expression -> additive_expression <strong>+</strong> term
-                         | additive_expression <strong>–</strong> term
-                         | term    
-    term -> term <strong>*</strong> factor
-          | term <strong>/</strong> factor
-          | factor
-    factor -> <strong>-</strong> positive_factor
-            | positive_factor
-    positive_factor -> <strong>~</strong> not_factor
-                     | not_factor
-    not_factor -> <strong>INT_CONST</strong>
-                | <strong>CHAR_CONST</strong>
-                | <strong>STRING_CONST</strong>
-                | keywordConstant
-                | ID
-                | ID <strong>[</strong> expression <strong>]</strong>
-                | call_expression
-                | <strong>(</strong> expression <strong>)</strong>
-    keywordConstant -> <strong>true</strong>
-                     | <strong>false</strong>
-                     | <strong>null</strong>
-                     | <strong>this</strong>
-    call_expression -> ID <strong>(</strong> expression <strong>)</strong>
-                     | ID <strong>.</strong> ID <strong>(</strong> expression <strong>)</strong>
-</pre>
+1. `program -> classlist`: 程序由类列表组成。
+
+2. `classlist -> classlist class | class`: 类列表由一个或多个类组成。
+
+3. `class -> class ID { classVarDecList subroutineDecList }`: 类由类名、类变量声明列表和子例程声明列表组成。
+
+4. `classVarDecList -> classVarDecList classVarDec | ε`: 类变量声明列表由一个或多个类变量声明组成，或为空。
+
+5. `classVarDec -> static type varNameList ; | field type varNameList ;`: 类变量声明包括静态变量声明和字段声明。
+
+6. `varNameList -> varNameList , ID | ID`: 变量名列表由一个或多个变量名组成，用逗号分隔。
+
+7. `type -> int | float | char | boolean | void | ID`: 类型可以是int、float、char、boolean、void或标识符。
+
+8. `subroutineDecList -> subroutineDecList subroutineDec | ε`: 子例程声明列表由一个或多个子例程声明组成，或为空。
+
+9. `subroutineDec -> constructor type ID ( params ) subroutineBody | function type ID ( params ) subroutineBody | method type ID (params ) subroutineBody`: 子例程声明包括构造函数声明、函数声明和方法声明。
+
+10. `params -> paramList | ε`: 参数由参数列表组成，或为空。
+
+11. `paramList -> paramList , param | param`: 参数列表由一个或多个参数组成，用逗号分隔。
+
+12. `param -> type ID`: 参数由类型和标识符组成。
+
+13. `subroutineBody -> { varDecList statements }`: 子例程体由变量声明列表和语句组成。
+
+14. `varDecList -> varDecList varDec | ε`: 变量声明列表由一个或多个变量声明组成，或为空。
+
+15. `varDec -> type varNameList ;`: 变量声明由类型和变量名列表组成。
+
+16. `statements -> statements statement | ε`: 语句由一个或多个语句组成，或为空。
+
+17. `statement -> assign_statement | if_statement | while_statement | return_statement | call_statement ;`: 语句可以是赋值语句、条件语句、循环语句、返回语句或调用语句。
+
+18. `assign_statement -> leftValue = expression ;`: 赋值语句由左值、等号和表达式组成。
+
+19. `leftValue -> ID | ID [ expression ]`: 左值可以是标识符或标识符后跟方括号的表达式。
+
+20. `if_statement -> if ( expression ) statement | if ( expression ) statement else statement`: 条件语句可以是带有或不带有else子句的if语句。
+
+21. `while_statement -> while ( expression ) { statement }`: 循环语句由循环条件和循环体组成。
+
+22. `return_statement -> return ; | return expression ;`: 返回语句可以是空返回或带有返回表达式。
+
+23. `call_statement -> ID ( expressions ) | ID . ID ( expressions )`: 调用语句可以是函数调用或方法调用。
+
+24. `expressions -> expression_list | ε`: 表达式由表达式列表组成，或为空。
+
+25. `expression_list -> expression_list , expression | expression`: 表达式列表由一个或多个表达式组成，用逗号分隔。
+
+26. `expression -> expression & boolExpression | expression | boolExpression`: 表达式可以是逻辑与操作、逻辑或操作或布尔表达式。
+
+27. `boolExpression -> additive_expression relational_operator additive_expression | additive_expression`: 布尔表达式由加法表达式和关系运算符组成，或仅由加法表达式组成。
+
+28. `relational_operator -> <= | >= | == | < | > | !=`: 关系运算符可以是小于等于、大于等于、等于、小于、大于或不等于。
+
+29. `additive_expression -> additive_expression + term | additive_expression – term | term`: 加法表达式由加法、减法或项组成。
+
+30. `term -> term * factor | term / factor | factor`: 项由乘法、除法或因子组成。
+
+31. `factor -> - positive_factor | positive_factor`: 因子可以是负数因子或正数因子。
+
+32. `positive_factor -> ~ not_factor | not_factor`: 正数因子可以是按位取反的因子或非按位取反的因子。
+
+33. `not_factor -> INT_CONST | CHAR_CONST | STRING_CONST | keywordConstant | ID | ID [ expression ] | call_expression | ( expression )`: 非因子可以是整数常量、字符常量、字符串常量、关键字常量、标识符、标识符后跟方括号的表达式、调用表达式或括号中的表达式。
+
+34. `keywordConstant -> true | false | null | this`: 关键字常量可以是true、false、null或this。
+
+35. `call_expression -> ID ( expression ) | ID . ID ( expression )`: 调用表达式可以是函数调用或方法调用。
+
+以下是不同语法树节点对应的输出:
+
+| ***\*Case\****     | ***\*Output\****         | ***\*Node Name\**** |
+| ------------------ | ------------------------ | ------------------- |
+| CLASS_K            | class                    | 类节点              |
+| CLASS_VAR_DEC_K    | class_var_dec            | 类变量声明节点      |
+| SUBROUTINE_DEC_K   | subroutine_dec           | 函数声明节点        |
+| BASIC_TYPE_K       | basic_type <lexeme>      | 基本类型节点        |
+| CLASS_TYPE_K       | class_type <lexeme>      | 类类型节点          |
+| PARAM_K            | param                    | 参数节点            |
+| VAR_DEC_K          | var_dec                  | 变量声明节点        |
+| ARRAY_K            | array                    | 数组节点            |
+| VAR_K              | var                      | 变量节点            |
+| IF_STATEMENT_K     | if_statement             | 条件语句节点        |
+| WHILE_STATEMENT_K  | while_statement          | 循环语句节点        |
+| RETURN_STATEMENT_K | return_statement         | 返回语句节点        |
+| CALL_STATEMENT_K   | call_statement           | 调用语句节点        |
+| BOOL_EXPRESSION_K  | bool_expression <lexeme> | 布尔表达式节点      |
+| COMPARE_K          | compare <lexeme>         | 比较节点            |
+| OPERATION_K        | operation <lexeme>       | 操作节点            |
+| BOOL_K             | bool                     | 布尔节点            |
+| ASSIGN_K           | assign                   | 赋值节点            |
+| SUBROUTINE_BODY_K  | subroutine_body          | 函数体节点          |
+
+对于输入的一个示例的输入文件`Main.java`,可获得如下抽象语法树.由上至下分别代表类节点，函数声明节点，基本类型节点（void），函数体节点，调用语句节点，返回语句节点。
+
+```shell
+class
+        subroutine_dec
+            basic_type void
+            subroutine_body
+        call_statement
+                            return_statement
+  class
+        subroutine_dec
+            basic_type void
+            subroutine_body
+        call_statement
+                  call_statement
+                  return_statement
+    subroutine_dec
+            basic_type void
+            subroutine_body
+        call_statement
+                            return_statement
+    subroutine_dec
+            basic_type void
+            param
+        basic_type int
+              subroutine_body
+        var_dec
+          basic_type int
+                  if_statement
+          compare <
+            var
+                      call_statement
+                                while_statement
+          compare >
+            var
+                      assign
+            var
+                      while_statement
+            compare >
+              var
+                          assign
+              var
+              operation -
+                var
+                          assign
+            var
+            operation -
+              var
+                      return_statement
+    subroutine_dec
+            basic_type void
+            param
+        basic_type int
+              subroutine_body
+        var_dec
+          class_type String
+                  assign
+          var
+                                          assign
+          var
+                  call_statement
+                    var
+        call_statement
+                    var
+        call_statement
+                  return_statement
+  class
+        subroutine_dec
+            basic_type void
+            subroutine_body
+        return_statement
+    subroutine_dec
+            basic_type int
+            param
+        basic_type int
+              subroutine_body
+        var_dec
+          basic_type int
+                  if_statement
+          compare <
+            var
+                      assign
+            var
+                          var
+          assign
+            var
+            var
+        return_statement
+          var
+    subroutine_dec
+            basic_type int
+            param
+        basic_type int
+              param
+        basic_type int
+              subroutine_body
+        var_dec
+          basic_type int
+                  var_dec
+          basic_type int
+                            var_dec
+          basic_type int
+                            var_dec
+          basic_type boolean
+                  assign
+          var
+                  assign
+          var
+                                  var
+        assign
+          var
+                                  var
+        assign
+          var
+                  assign
+          var
+                  if_statement
+          bool_expression |
+            compare ==
+              var
+                          compare ==
+              var
+                        return_statement
+                    assign
+          var
+          compare ==
+            compare <
+              var
+                          compare <
+              var
+                      while_statement
+          compare <
+            var
+                      if_statement
+            compare ==
+              bool_expression &
+                var
+                var
+              var
+            assign
+              var
+              operation +
+                var
+                var
+          assign
+            var
+            operation +
+              var
+              var
+          assign
+            var
+            operation +
+              var
+              var
+          assign
+            var
+            operation +
+              var
+                      if_statement
+          bool_expression ~
+            var
+          assign
+            var
+                          var
+        return_statement
+          var
+    subroutine_dec
+            basic_type int
+            param
+        basic_type int
+              param
+        basic_type int
+              subroutine_body
+        var_dec
+          basic_type int
+                            if_statement
+          bool_expression |
+            compare <
+              var
+                          compare >
+              var
+              var
+          return_statement
+                    assign
+          var
+                                  var
+            operation +
+              var
+              var
+        assign
+          var
+                                  var
+            var
+        if_statement
+          compare <
+            operation -
+              operation -
+                var
+                var
+              var
+            var
+          return_statement
+            operation +
+              var
+              var
+          return_statement
+            operation +
+              operation +
+                var
+                var
+                  subroutine_dec
+            basic_type int
+            param
+        basic_type int
+              param
+        basic_type int
+              subroutine_body
+        var_dec
+          basic_type int
+                  var_dec
+          basic_type int
+                            var_dec
+          basic_type boolean
+                  assign
+          var
+                                  var
+        assign
+          var
+                                  var
+        if_statement
+          compare ==
+            var
+                      return_statement
+                                                assign
+          var
+          compare ==
+            compare <
+              var
+                          compare <
+              var
+                      assign
+          var
+                                  var
+            var
+        if_statement
+          bool_expression ~
+            var
+          assign
+            var
+                          var
+        return_statement
+          var
+    subroutine_dec
+            basic_type int
+            param
+        basic_type int
+              subroutine_body
+        var_dec
+          basic_type int
+                            if_statement
+          bool_expression &
+            compare >
+              var
+                          bool_expression |
+              compare <
+                var
+                              compare ==
+                var
+                          return_statement
+                    assign
+          var
+                  assign
+          var
+                  while_statement
+          compare <
+            var
+            var
+          assign
+            var
+            operation +
+              var
+              var
+          assign
+            var
+            operation +
+              var
+                      return_statement
+          var
+    subroutine_dec
+            basic_type int
+            param
+        basic_type int
+              param
+        basic_type int
+              subroutine_body
+        var_dec
+          basic_type int
+                  var_dec
+          basic_type int
+                  assign
+          var
+          var
+        assign
+          var
+                  if_statement
+          compare ==
+            var
+                      return_statement
+                    while_statement
+          compare >
+            var
+                      assign
+            var
+                                        var
+              var
+          assign
+            var
+            operation -
+              var
+                      return_statement
+          var
+    subroutine_dec
+            basic_type int
+            param
+        basic_type int
+              subroutine_body
+        var_dec
+          basic_type int
+                                                var_dec
+          basic_type int
+                            assign
+          var
+                  assign
+          var
+                                  var
+        assign
+          var
+                                  var
+                    assign
+          var
+          var
+        if_statement
+          compare <
+            var
+                      return_statement
+                                                while_statement
+          compare >
+            var
+                                    assign
+            var
+                                                      var
+          assign
+            var
+            operation +
+              var
+              var
+          assign
+            var
+                                        var
+              var
+          if_statement
+            bool_expression &
+              bool_expression |
+                compare <
+                  var
+                  var
+                compare ==
+                  var
+                  var
+              compare >
+                var
+                            assign
+              var
+              operation +
+                var
+                var
+          assign
+            var
+            operation -
+              var
+                      return_statement
+          var
+    subroutine_dec
+            basic_type int
+            param
+        basic_type int
+              param
+        basic_type int
+              subroutine_body
+        if_statement
+          compare >
+            var
+            var
+          return_statement
+            var
+          return_statement
+            var
+    subroutine_dec
+            basic_type int
+            param
+        basic_type int
+              param
+        basic_type int
+              subroutine_body
+        if_statement
+          compare <
+            var
+            var
+          return_statement
+            var
+          return_statement
+            var
+  class
+        subroutine_dec
+            class_type Array
+            param
+        basic_type int
+              subroutine_body
+        var_dec
+          class_type Array
+                  assign
+          var
+                                  var
+        return_statement
+          var
+    subroutine_dec
+            basic_type void
+            subroutine_body
+        call_statement
+                            return_statement
+  class
+        class_var_dec
+            class_type Array
+          subroutine_dec
+            basic_type void
+            subroutine_body
+        assign
+          var
+                  assign
+          array
+                              assign
+          array
+                              return_statement
+    subroutine_dec
+            basic_type int
+            param
+        basic_type int
+              subroutine_body
+        return_statement
+          array
+            var
+    subroutine_dec
+            basic_type void
+            param
+        basic_type int
+              param
+        basic_type int
+              subroutine_body
+        assign
+          array
+            var
+          var
+        return_statement
+    subroutine_dec
+            basic_type int
+            param
+        basic_type int
+              subroutine_body
+        var_dec
+          class_type Array
+                  if_statement
+          compare <
+            var
+                      call_statement
+                                assign
+          var
+                  while_statement
+          compare <
+            array
+                          var
+          assign
+            var
+            array
+                      if_statement
+          compare >
+            operation +
+              var
+              var
+                      call_statement
+                                if_statement
+          compare >
+            array
+                          operation +
+              var
+                        assign
+            array
+              operation +
+                var
+                            operation -
+              operation -
+                array
+                                  var
+                        if_statement
+            compare ==
+              array
+                              operation +
+                var
+                            assign
+              array
+                operation +
+                  var
+                                operation +
+                operation +
+                  var
+                  var
+                            assign
+              array
+                operation +
+                  var
+                                array
+                          assign
+            array
+                          operation +
+              operation +
+                var
+                var
+                      assign
+          array
+                              return_statement
+          operation +
+            var
+                subroutine_dec
+            basic_type void
+            param
+        basic_type int
+              subroutine_body
+        var_dec
+          class_type Array
+                  var_dec
+          class_type Array
+                  assign
+          var
+          operation -
+            var
+                    assign
+          var
+          array
+                    if_statement
+          compare ==
+            array
+                                    assign
+            array
+                          operation -
+              operation -
+                array
+                                  var
+                        assign
+            array
+                          operation +
+              operation -
+                array
+                                  var
+              array
+                          if_statement
+            compare ==
+              array
+                              operation +
+                var
+                            assign
+              array
+                              operation +
+                var
+                            assign
+              array
+                              array
+                        return_statement
+  class
+        class_var_dec
+            class_type Array
+          class_var_dec
+            basic_type int
+          class_var_dec
+            basic_type boolean
+          class_var_dec
+            basic_type int
+          subroutine_dec
+            class_type String
+            param
+        basic_type int
+              subroutine_body
+        if_statement
+          compare <
+            var
+                      assign
+            var
+                    assign
+          var
+          var
+        assign
+          var
+                  assign
+          var
+                                  var
+        assign
+          var
+                  return_statement
+              subroutine_dec
+            basic_type void
+            subroutine_body
+        call_statement
+                  return_statement
+    subroutine_dec
+            basic_type int
+            subroutine_body
+        return_statement
+          var
+    subroutine_dec
+            basic_type char
+            param
+        basic_type int
+              subroutine_body
+        var_dec
+          basic_type char
+                  assign
+          var
+          array
+            var
+        return_statement
+          var
+    subroutine_dec
+            basic_type void
+            param
+        basic_type int
+              param
+        basic_type char
+              subroutine_body
+        assign
+          array
+            var
+          var
+        return_statement
+    subroutine_dec
+            class_type String
+            param
+        basic_type char
+              subroutine_body
+        var_dec
+          basic_type int
+                  if_statement
+          compare ==
+            var
+            var
+          call_statement
+                                assign
+          var
+          var
+        assign
+          array
+            var
+          var
+        assign
+          var
+          operation +
+            var
+                    return_statement
+              subroutine_dec
+            basic_type void
+            subroutine_body
+        var_dec
+          basic_type int
+                  assign
+          var
+          var
+        assign
+          var
+          operation -
+            var
+                    return_statement
+    subroutine_dec
+            basic_type int
+            subroutine_body
+        var_dec
+          basic_type int
+                                      var_dec
+          basic_type int
+                  var_dec
+          basic_type boolean
+                  assign
+          var
+                  assign
+          var
+                  assign
+          var
+          var
+        assign
+          var
+                  if_statement
+          compare ==
+            array
+                                    assign
+            var
+                      assign
+            var
+            operation +
+              var
+                      while_statement
+          compare <
+            var
+            var
+          if_statement
+            bool_expression &
+              compare >
+                array
+                  var
+                              compare <
+                array
+                  var
+                            assign
+              var
+              operation -
+                array
+                  var
+                            assign
+              var
+              operation +
+                                                    var
+                                  var
+            assign
+              var
+              operation +
+                var
+                            if_statement
+              var
+              assign
+                var
+                                  var
+            return_statement
+              var
+        if_statement
+          var
+          assign
+            var
+                          var
+        return_statement
+          var
+    subroutine_dec
+            basic_type void
+            param
+        basic_type int
+              subroutine_body
+        var_dec
+          basic_type int
+                  var_dec
+          basic_type int
+                            var_dec
+          basic_type int
+                  assign
+          var
+                  if_statement
+          compare <
+            var
+                      assign
+            var
+                      assign
+            var
+                                        var
+        assign
+          var
+                                  var
+                    assign
+          var
+                                  var
+                    assign
+          var
+          operation -
+            var
+            var
+        assign
+          var
+          operation +
+            var
+                    if_statement
+          compare <
+            var
+                      if_statement
+            var
+            call_statement
+                                        assign
+              var
+                        call_statement
+                        var
+          call_statement
+                        var
+          call_statement
+                        var
+        return_statement
+    subroutine_dec
+            basic_type char
+            subroutine_body
+        return_statement
+              subroutine_dec
+            basic_type char
+            subroutine_body
+        return_statement
+            class
+        subroutine_dec
+            basic_type void
+            param
+        basic_type char
+              subroutine_body
+        call_statement
+                    var
+        return_statement
+    subroutine_dec
+            basic_type void
+            param
+        class_type String
+              subroutine_body
+        var_dec
+          basic_type int
+                  var_dec
+          basic_type char
+                  var_dec
+          basic_type int
+                  assign
+          var
+                  assign
+          var
+                              while_statement
+          compare <
+            var
+            var
+          assign
+            var
+                                        var
+          call_statement
+                        var
+          assign
+            var
+            operation +
+              var
+                      return_statement
+    subroutine_dec
+            basic_type void
+            param
+        basic_type int
+              subroutine_body
+        var_dec
+          class_type String
+                  assign
+          var
+                                          call_statement
+                    var
+        call_statement
+                    var
+        return_statement
+    subroutine_dec
+            basic_type void
+            subroutine_body
+        call_statement
+                            return_statement
+  class
+        subroutine_dec
+            basic_type char
+            subroutine_body
+        var_dec
+          basic_type char
+                  assign
+          var
+                              return_statement
+          var
+    subroutine_dec
+            class_type String
+            subroutine_body
+        var_dec
+          basic_type char
+                  var_dec
+          class_type String
+                  assign
+          var
+                                          while_statement
+                    assign
+            var
+                                    if_statement
+            compare ==
+              var
+                          return_statement
+              var
+          assign
+            var
+                                        var
+        return_statement
+          var
+  class
+        subroutine_dec
+            basic_type void
+            param
+        basic_type char
+              subroutine_body
+        return_statement
+    subroutine_dec
+            basic_type char
+            subroutine_body
+        return_statement
+```
+
+
+
 ## 语义分析
+
 分析过程：通过对语法分析的结果（语法树）进行分析，判断语义错误，若有错输出错误内容。
 
 成员函数：
@@ -590,7 +1502,23 @@ checkStatement：检查赋值语句、条件语句、循环语句、返回语句
 | error19           | main 函数返回类型不正确 |在主类中，main 函数的返回类型必须是 void                                                                   |
 | error20           | main 函数参数数量不正确 |在主类中，main 函数的参数数量必须为 null                                                                   |
 
+每出现一个错误将会对错误数量进行累计计数，同时继续扫描剩余内容，直到指针到达文件末尾。error将全部返回并输出。
+
+例：对于一个不包含`main()`的程序，如下所示，会返回以下错误：
+
+```java
+class Main{
+     function void ADADADWE() {
+       Output.printString("Hello, world!");
+       return;
+     }
+   }
+```
+
+![image-20230618215317730](https://raw.githubusercontent.com/Sweet196/Picgo-images/main/problems/202306182153371.png)
+
 ### 符号表
+
 对应文件`SymbolTable.cpp`
 
 定义了一个SymbolTable类，其中包括了一些成员变量和成员函数，用于存储和操作符号表。
@@ -636,7 +1564,63 @@ classIndexFind函数用于在类索引表中查找指定类名是否存在，如
 getFieldNumber函数用于获取指定类中的FIELD类型变量数量。它首先在类索引表中查找指定类的编号，然后遍历该类的类表，统计其中的FIELD类型变量数量并返回。
 
 ## 中间代码生成
-111111
+
+对应文件：`CodeGen`
+
+## 中间代码生成的任务
+
+将通过词法、语法、语义分析后的结果转换成中间代码，将前端与后端分离，使得后端可以处理多种目标平台。常用中间代码的形式有：波兰式、三地址码、DAG图等。
+
+## 具体实现
+
+#### 类属性
+
+存储段
+
+| Segment | 含义               |
+| ------- | ------------------ |
+| CONST   | 常量               |
+| ARG     | 函数参数区         |
+| LOCAL   | 本地变量区         |
+| STATIC  | 静态变量区         |
+| THIS    | 指向当前对象的指针 |
+| THAT    | 指向其他对象的指针 |
+| POINTER | 指针区             |
+| TEMP    | 临时变量区         |
+
+定义操作名称
+
+| 操作名 | 操作含义                         |
+| ------ | -------------------------------- |
+| ADD    | 加法                             |
+| SUB    | 减法                             |
+| NEG    | 将操作数按位取反加一（求相反数） |
+| EQ     | 等于                             |
+| GT     | 大于                             |
+| LT     | 小于                             |
+| AND    | 与运算                           |
+| OR     | 或运算                           |
+| NOT    | 将操作数按位取反                 |
+
+#### 成员函数
+
+| 函数名            | 具体含义                                                     |
+| ----------------- | ------------------------------------------------------------ |
+| write ()          | 用于翻译语法树中的一个节点。该函数首先将节点对应的符号表信息插入符号表中，然后调用 `translate` 函数翻译当前节点，接着递归地调用 `write` 函数翻译当前节点的所有子节点。 |
+| translate()       | 用于翻译语法树节点的具体操作。该函数根据节点类型的不同，调用不同的翻译函数来完成对应的操作。 |
+| translateCall()   | 通过后序遍历语法树来生成相应的虚拟机代码，包括算术操作、比较操作、布尔操作、函数调用、变量访问等。 |
+| writePush()       | 生成将指定段的指定索引处的值压入栈中的虚拟机代码。           |
+| writePop()        | 生成将栈顶元素弹出并存储到指定段的指定索引处的虚拟机代码。   |
+| writeArithmetic() | 生成执行算术操作的虚拟机代码。                               |
+| writeLabel()      | 生成设置标签的虚拟机代码。                                   |
+| writeGoto()       | 生成无条件跳转的虚拟机代码。                                 |
+| writeIf()         | 生成条件跳转的虚拟机代码。                                   |
+| writeCall()       | 生成调用函数的虚拟机代码。                                   |
+| writeFunction()   | 生成定义函数的虚拟机代码。                                   |
+| writeReturn()     | 生成返回函数的虚拟机代码。                                   |
+
+
+
 
 ## 总结与展望
 
