@@ -475,6 +475,29 @@ int main() {
 </pre>
 ## 语义分析
 对应文件"Error.cpp"
+| 函数名            | 错误类型               |错误信息                                                                                                 |
+| :---------------- | ---------------------- | --------------------------------------------------------------------------------------------------------|
+| syntaxError       | 语法错误               |在当前解析器文件（currentParserFilename）的第 token.row 行，期望一个 expected，但实际得到一个 token.lexeme。 |
+| error1            | 类名和文件名不一致。    |在文件 currentParserFilename.java 中，类名应该和文件名相同。                                               |
+| error2            | 变量重定义             |在当前类 currentClass 的第 row 行，变量类型为 type，变量名为 name，已经被重定义。                            |
+| error3            | 函数重定义              |在当前类 currentClass 的第 row 行，函数返回类型为 type，函数名为 name，已经被重定义。                       |
+| error4            | 类型未定义             |在当前类 currentClassName 的第 row 行，类型 type 未定义                                                   |
+| error5            | 变量未定义             |在当前类 currentClassName 的第 row 行，变量 varName 在当前作用域中未声明                                   |
+| error6            | 类型不是数组类型       |在当前类 currentClassName 的第 row 行，类型 type 不是数组类型                                              |
+| error7            | 调用类中不存在的成员函数|在当前类 currentClassName 的第 row 行，类 callerName 中不存在函数 functionName()                           |
+| error8            | 调用函数用了错误的调用方式|在当前类 currentClassName 的第 row 行，子程序 functionName 被当成了一个方法，但实际上它是在函数内被调用的  |
+| error9            | 在类中调用了不存在的函数|在当前类 currentClassName 的第 row 行，类 callerName 中不存在函数 functionName                             |
+| error10           |调用不是当前类的成员函数|在当前类 currentClassName 的第 row 行，函数 functionName 不是类 callerName 的成员函数                       |
+| error11           | 函数返回值类型错误      |在当前类 currentClassName 的第 row 行，函数返回了空值，但实际上返回类型应该是 type                          |
+| error12           | 函数返回值类型错误      |在当前类 currentClassName 的第 row 行，函数返回了值，但实际上返回类型应该是 void                            |
+| error13           | 构造函数返回值类型错误  |在当前类 currentClassName 的第 row 行，构造函数返回类型必须是类类型                                         |
+| error14           | 函数参数数量不足        |在当前类 currentClassName 的第 row 行，函数 functionName() 的参数数量过少                                  |
+| error15           | 函数参数数量过多        |在当前类 currentClassName 的第 row 行，函数 functionName() 的参数数量过多                                  |
+| error16           |主类不存在               |主类不存在                                                                                               |
+| error17           | 主类中没有 main 函数    |在主类中，main 函数不存在                                                                                 |
+| error18           | main 函数的类型不正确   |在主类中，main 函数的类型必须是函数类型                                                                    |
+| error19           | main 函数返回类型不正确 |在主类中，main 函数的返回类型必须是 void                                                                   |
+| error20           | main 函数参数数量不正确 |在主类中，main 函数的参数数量必须为 null                                                                   |
 1. syntaxError(string currentParserFilename, string expected, Scanner::Token token)
 错误类型：语法错误。
 错误信息：在当前解析器文件（currentParserFilename）的第 token.row 行，期望一个 expected，但实际得到一个 token.lexeme。
