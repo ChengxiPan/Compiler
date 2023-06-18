@@ -25,8 +25,23 @@ https://github.com/nanlan2017/jack-compiler
 ```shell
 .
 ├── CMakeLists.txt
+├── ErrorInputs
+│   ├── error1.java
+│   ├── error2.java
+│   └── error3.java
 ├── Makefile
 ├── Readme.md
+├── include
+│   ├── Analyzer.h
+│   ├── CodeGen.h
+│   ├── Error.h
+│   ├── Parser.h
+│   ├── Scanner.h
+│   └── SymbolTable.h
+├── inputs
+│   ├── Main.java
+│   ├── demo2_Array.java
+│   └── demo3_gcd.java
 ├── rules
 │   ├── Array.java
 │   ├── IO.java
@@ -36,17 +51,6 @@ https://github.com/nanlan2017/jack-compiler
 │   ├── Output.java
 │   ├── String.java
 │   └── Sys.java
-├── include
-│   ├── Analyzer.h
-│   ├── CodeGen.h
-│   ├── Error.h
-│   ├── Parser.h
-│   ├── Scanner.h
-│   └── SymbolTable.h
-├── inputs
-│   ├── demo1_HelloWorld.java
-│   ├── demo2_Array.java
-│   └── demo3_gcd.java
 ├── src
 │   ├── Analyzer.cpp
 │   ├── CodeGen.cpp
@@ -62,25 +66,28 @@ https://github.com/nanlan2017/jack-compiler
     ├── CodeGen.h
     ├── Error.cpp
     ├── Error.h
-    ├── Lexical.cpp
+    ├── Lexicalt.cpp
     ├── Main.java
     ├── Makefile
     ├── Parser.cpp
     ├── Parser.h
+    ├── Parsert.cpp
     ├── Scanner.cpp
     ├── Scanner.h
     ├── SymbolTable.cpp
     ├── SymbolTable.h
-    ├── rules
-    │   ├── Array.java
-    │   ├── IO.java
-    │   ├── Input.java
-    │   ├── Math.java
-    │   ├── Memory.java
-    │   ├── Output.java
-    │   ├── String.java
-    │   └── Sys.java
-    └── main.cpp
+    ├── main.cpp
+    └── rules
+        ├── Array.java
+        ├── IO.java
+        ├── Input.java
+        ├── Math.java
+        ├── Memory.java
+        ├── Output.java
+        ├── String.java
+        └── Sys.java
+
+7 directories, 55 files
 ```
 
 - `CMakeLists.txt`：CMake构建系统的配置文件，用于定义项目的构建规则和依赖关系。
