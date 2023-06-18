@@ -27,7 +27,7 @@ https://github.com/nanlan2017/jack-compiler
 ├── CMakeLists.txt
 ├── Makefile
 ├── Readme.md
-├── api
+├── rules
 │   ├── Array.java
 │   ├── IO.java
 │   ├── Input.java
@@ -71,7 +71,7 @@ https://github.com/nanlan2017/jack-compiler
     ├── Scanner.h
     ├── SymbolTable.cpp
     ├── SymbolTable.h
-    ├── api
+    ├── rules
     │   ├── Array.java
     │   ├── IO.java
     │   ├── Input.java
@@ -86,7 +86,7 @@ https://github.com/nanlan2017/jack-compiler
 - `CMakeLists.txt`：CMake构建系统的配置文件，用于定义项目的构建规则和依赖关系。
 - `Makefile`：用于GNU Make构建工具的配置文件，定义了项目的编译规则和依赖关系。
 - `Readme.md`：项目的说明文档，包含项目的简介、使用方法、贡献指南等信息。
-- `api`目录：存放接口相关的文件，以`.java`为扩展名，用于语法规则。
+- `rules`目录：存放接口相关的文件，以`.java`为扩展名，用于语法规则。
 - `include`目录：包含项目的头文件（`.h`文件），用于声明各个模块的接口和数据结构。
 - `inputs`目录：存放输入文件的目录，可能包含多个`.java`文件，如`demo1_HelloWorld.java`、`demo2_Array.java`等，用于测试编译器的输入。
 - `src`目录：包含项目的源代码文件，包括各个模块的实现文件（`.cpp`文件）和主程序文件（`main.cpp`）。
@@ -143,7 +143,7 @@ make
 
 ```shell
 cp -r inputs output/
-cp -r api output/
+cp -r rules output/
 ```
 
 4、进入output文件夹执行。<span style="color:red">提供了三个测试用例，每个使用前都需要将文件名改成Main，否则会触发规定的classname error</span>

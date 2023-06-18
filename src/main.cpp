@@ -24,14 +24,14 @@ int main(int argc, char *argv[]) {
     filenames.push_back(argv[i]);
     fin.close();
   }
-  filenames.push_back("./api/Sys.java");
-  filenames.push_back("./api/Math.java");
-  filenames.push_back("./api/Array.java");
-  filenames.push_back("./api/Memory.java");
-  filenames.push_back("./api/String.java");
-  filenames.push_back("./api/Output.java");
-  filenames.push_back("./api/Input.java");
-  filenames.push_back("./api/IO.java");
+  filenames.push_back("./rules/Sys.java");
+  filenames.push_back("./rules/Math.java");
+  filenames.push_back("./rules/Array.java");
+  filenames.push_back("./rules/Memory.java");
+  filenames.push_back("./rules/String.java");
+  filenames.push_back("./rules/Output.java");
+  filenames.push_back("./rules/Input.java");
+  filenames.push_back("./rules/IO.java");
   Parser parser(filenames);
   parser.parse_program();
   if (!hasError()) {
