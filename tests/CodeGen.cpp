@@ -31,7 +31,7 @@ void CodeGen::translate(Parser::TreeNode *t) {
   switch (t->nodeKind) {
   case Parser::CLASS_K: {
     fout.close();
-    string path = "./api/";
+    string path = "./rules/";
     currentClassName = t->child[0]->token.lexeme;
     if (currentClassName == "Sys" || currentClassName == "Memory" ||
         currentClassName == "Math" || currentClassName == "String" ||
