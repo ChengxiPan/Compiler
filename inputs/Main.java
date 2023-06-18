@@ -1,5 +1,5 @@
 class Main {
-  function void demo1_HelloWorld() {
+  function void main() {
     Output.printString("Hello, world!");
     return;
   }
