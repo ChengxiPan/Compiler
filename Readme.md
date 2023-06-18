@@ -14,7 +14,7 @@ Release:        22.04
 
 https://github.com/Dayunxi/LL1-Compiler
 
-https://github.com/nanlan2017/jack-compiler
+https://github.com/shellphy/jack-compiler
 
 ### 项目概述
 
@@ -176,7 +176,7 @@ make CodeGen
 
 需要注意的是，tests文件夹内的测试仅包含了对`HelloWorld.java`的用例测试，对于其他功能（如语法分析中对各类接口的调用，生成规则及使用），可以自行编写测试。
 
-inputs中提供了3个测试用例，如下:
+inputs中提供了3个测试用例，提供的demo1如下:
 
 * demo1: HelloWorld
 
@@ -188,108 +188,6 @@ inputs中提供了3个测试用例，如下:
     }
   }
   ```
-
-* demo2: Array
-
-  ```java
-  class Main 
-  {
-      function void main() 
-      {
-  		Array arr;
-  		String s;
-  		int i;
-  		
-  		arr = Array.new(5);		// 创建一个大小为5的数组
-  		i = 0;
-  		while (i < 5)
-  		{
-  			s = Input.readLine();
-  			arr[i] = s.intValue();
-  			i = i + 1;
-  		}
-  		
-  		Main.bubble_sort(arr, 5);
-  		
-  		i = 0;
-  		while (i < 5)
-  		{
-  			Output.printInt(arr[i]);
-  			i = i + 1;
-  		}
-  		Output.println();
-  		
-  		return;
-  	}
-  	
-  	/* 冒泡排序 */
-  	function void bubble_sort(Array arr, int n)
-  	{
-  		int i, j, tmp;
-  		i = n - 1;
-  		
-  		while (i > 0 | i == 0)	
-  		{
-  			j = 0;
-  			while (j < i)
-  			{
-  				if (arr[j] > arr[j + 1])
-  				{
-  					tmp = arr[j];
-  					arr[j] = arr[j + 1];
-  					arr[j + 1] = tmp;
-  				}
-  				j = j + 1;
-  			}
-  			i = i - 1;
-  		}
-  	
-  		return;
-  	}
-  }
-  ```
-
-* demo3: gcd
-
-  ```java
-  class Main
-  {
-  	function void main()
-  	{
-  		int a, b, c;
-  		String s;
-  		
-  		s = Input.readLine();
-  		a = s.intValue();
-  		
-  		s = Input.readLine();
-  		b = s.intValue();
-  		
-  		c = Main.gcd(a, b);   
-  		
-  		Output.printInt(c);
-  		Output.println();
-  		
-  		return;
-  	}
-  	
-  	// 求最大公约数
-  	function int gcd(int a, int b)
-  	{
-  		if (b == 0)
-  		{
-  			return a;
-  		}
-  		else
-  		{
-  			return Main.gcd(b, a - a / b * b);
-  		}
-  	}
-  	
-  }
-  ```
-
-  
 
 ## 词法分析
 
@@ -796,7 +694,12 @@ getFieldNumber函数用于获取指定类中的FIELD类型变量数量。它首�
 
 ### 目标代码生成的任务
 
-将通过词法、语法、语义分析后的结果转换成目标代码，将前端与后端分离，使得后端可以处理多种目标平台。常用目标代码的形式有：波兰式、三地址码、DAG图等。
+目标代码生成是编译器的最后一个阶段，它的任务是将通过词法、语法、语义分析后的结果转换成目标代码，实现将高级语言翻译成底层的机器语言。也可也先将结果转换成中间代码，再将中间代码翻译成目标代码。
+
+目标代码生成的主要任务包括：
+
+1. 寄存器分配：将程序中的变量、临时值等映射到目标机器的寄存器或内存位置。这涉及到决定何时将变量放入寄存器中、何时将其保存到内存中，以及如何管理寄存器的使用。
+2. 指令选择：根据源代码的语义和目标平台的指令集，选择合适的目标机器指令来执行相应的操作。这包括将源代码中的不同语句和表达式映射到目标机器指令的序列。
 
 ### 具体实现
 
@@ -839,14 +742,21 @@ getFieldNumber函数用于获取指定类中的FIELD类型变量数量。它首�
 | writePush()       | 生成将指定段的指定索引处的值压入栈中的虚拟机代码。           |
 | writePop()        | 生成将栈顶元素弹出并存储到指定段的指定索引处的虚拟机代码。   |
 | writeArithmetic() | 生成执行算术操作的虚拟机代码。                               |
-| writeLabel()      | 生成设置标签的虚拟机代码。                                   |
-| writeGoto()       | 生成无条件跳转的虚拟机代码。                                 |
-| writeIf()         | 生成条件跳转的虚拟机代码。                                   |
-| writeCall()       | 生成调用函数的虚拟机代码。                                   |
-| writeFunction()   | 生成定义函数的虚拟机代码。                                   |
-| writeReturn()     | 生成返回函数的虚拟机代码。                                   |
+| writeLabel()      | 生成设置标签。                                               |
+| writeGoto()       | 生成无条件跳转。                                             |
+| writeIf()         | 生成条件跳转。                                               |
+| writeCall()       | 生成调用函数。                                               |
+| writeFunction()   | 生成定义函数。                                               |
+| writeReturn()     | 生成返回函数。                                               |
 
+需要注意的是，由于跳过了中间代码生成的部分，没有进行四元式的编写；但是通过将不同的操作转化为相应的汇编指令来实现四元式的功能。简单解释如下：
 
+<pre>
+translate()：根据节点的类型选择相应的操作。在每个 case 中，根据节点类型执行相应的操作，例如处理赋值语句、方法调用、循环语句、条件语句等。这些操作会调用其他函数来生成相应的汇编代码。
+writeExpression()：通过递归遍历表达式树来生成相应的汇编代码。根据表达式节点的类型，执行相应的操作。例如，对于算术运算节点，调用 writeArithmetic 函数生成相应的算术指令；对于变量节点，调用 writePush 函数将变量的值压入堆栈。
+writePush()、writePop()：根据指定的段和索引生成相应的汇编代码，将值从指定的段读取或写入堆栈。
+writeArithmetic()：根据指定的算术操作生成相应的汇编代码。
+</pre>
 
 
 ## 总结与展望
