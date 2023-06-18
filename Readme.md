@@ -163,9 +163,8 @@ make clean
 make Lexical
 # 语法分析：
 make Parser
-# 语义分析
-make Analyser
-# 中间代码生成：已是最终目标，请返回步骤1、2
+# 语义分析、中间代码生成：输入错误可触发报错，输入正确会生成中间代码
+make CodeGen
 ```
 
 需要注意的是，tests文件夹内的测试仅包含了对`HelloWorld.java`的用例测试，对于其他功能（如语法分析中对各类接口的调用，生成规则及使用），可以自行编写测试。
