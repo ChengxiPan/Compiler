@@ -10,9 +10,11 @@ Release:        22.04
 
 ## 项目简介
 
-规则参考来源：https://github.com/Dayunxi/LL1-Compiler
+规则参考来源：
 
-中间代码生成参考：https://github.com/shellphy/jack-compiler
+https://github.com/Dayunxi/LL1-Compiler
+
+https://github.com/nanlan2017/jack-compiler
 
 ### 项目概述
 
