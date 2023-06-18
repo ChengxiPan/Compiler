@@ -17,7 +17,7 @@ void syntaxError(string currentParserFilename, string expected,
 // 类名和函数名不一致
 void error1(string currentParserFilename) {
   errorNum++;
-  cerr << "Error in file " << currentParserFilename << ".jack: "
+  cerr << "Error in file " << currentParserFilename << ".java: "
        << "classname should be same as filename" << endl;
 }
 

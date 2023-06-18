@@ -37,9 +37,9 @@ void CodeGen::translate(Parser::TreeNode *t) {
         currentClassName == "Math" || currentClassName == "String" ||
         currentClassName == "Output" || currentClassName == "Input" ||
         currentClassName == "Array" || currentClassName == "IO")
-      fout.open(path + currentClassName + ".vm");
+      fout.open(path + currentClassName + ".mid");
     else
-      fout.open(currentClassName + ".vm");
+      fout.open(currentClassName + ".mid");
     break;
   }
   case Parser::SUBROUTINE_DEC_K: {
