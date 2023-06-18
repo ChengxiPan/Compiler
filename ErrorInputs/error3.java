@@ -1,5 +1,5 @@
-class Main{
-     function void main() {
+class WRY{
+     function void 123kasd() {
        Output.printInt(a);
        Output.printString("Hello, world!");
        return;
