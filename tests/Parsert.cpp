@@ -9,10 +9,6 @@
 using namespace std;
 
 int main(int argc, char *argv[]) {
-  if (argc < 2) {
-    cerr << "usage: " << argv[0] << " <filename, filename ... >" << endl;
-    exit(-1);
-  }
   ifstream fin;
   vector<string> filenames;
   for (int i = 1; i < argc; i++) {
@@ -34,14 +30,6 @@ int main(int argc, char *argv[]) {
   filenames.push_back("./rules/IO.java");
   Parser parser(filenames);
   parser.parse_program();
-  if (!hasError()) {
-    Analyzer analyzer(parser.getSyntaxTree());
-    analyzer.check();
-  }
-  if (!hasError()) {
-    CodeGen cgen;
-    cgen.write(parser.getSyntaxTree());
-  }
-
+  parser.print();
   return 0;
 }
