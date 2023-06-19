@@ -512,6 +512,8 @@ class
 
 分析过程：通过对语法分析的结果（语法树）进行分析，判断语义错误，若有错输出错误内容。
 
+<img src="https://raw.githubusercontent.com/Sweet196/Picgo-images/main/problems/202306190829541.png" alt="image-20230619082854405" style="zoom: 67%;" />
+
 成员函数：
 <pre>
 class Analyzer {
@@ -739,8 +741,8 @@ getFieldNumber函数用于获取指定类中的FIELD类型变量数量。它首�
 | write ()          | 用于翻译语法树中的一个节点。该函数首先将节点对应的符号表信息插入符号表中，然后调用 `translate` 函数翻译当前节点，接着递归地调用 `write` 函数翻译当前节点的所有子节点。 |
 | translate()       | 用于翻译语法树节点的具体操作。该函数根据节点类型的不同，调用不同的翻译函数来完成对应的操作。 |
 | translateCall()   | 通过后序遍历语法树来生成相应的虚拟机代码，包括算术操作、比较操作、布尔操作、函数调用、变量访问等。 |
-| writePush()       | 生成将指定段的指定索引处的值压入栈中的虚拟机代码。           |
-| writePop()        | 生成将栈顶元素弹出并存储到指定段的指定索引处的虚拟机代码。   |
+| writePush()       | 生成将指定段的指定索引处的值压入栈中。                       |
+| writePop()        | 生成将栈顶元素弹出并存储到指定段的指定索引处。               |
 | writeArithmetic() | 生成执行算术操作的虚拟机代码。                               |
 | writeLabel()      | 生成设置标签。                                               |
 | writeGoto()       | 生成无条件跳转。                                             |
